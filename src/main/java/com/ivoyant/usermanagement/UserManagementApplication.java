@@ -21,8 +21,8 @@ public class UserManagementApplication {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void triggerMail() throws MessagingException {
-		senderService.sendSimpleEmail("thilakraya999@gmail.com",
-				"This is email body Sampada",
+		senderService.sendSimpleEmail("druva345@gmail.com",
+				"This is email body ",
 				"This is email subject Testing Purpose");
 	}
 }
