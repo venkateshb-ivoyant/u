@@ -12,17 +12,18 @@ import org.springframework.context.event.EventListener;
 @SpringBootApplication
 @EntityScan(basePackages = "com.ivoyant,usermanagement.entity")
 public class UserManagementApplication {
-	@Autowired
-	private EmailSenderService senderService;
+    @Autowired
+    private EmailSenderService senderService;
 
-	public static void main(String[] args) {
-		SpringApplication.run(UserManagementApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(UserManagementApplication.class, args);
+    }
 
-	@EventListener(ApplicationReadyEvent.class)
-	public void triggerMail() throws MessagingException {
-		senderService.sendSimpleEmail("druva345@gmail.com",
-				"This is email body ",
-				"This is email subject Testing Purpose");
-	}
+    @EventListener(ApplicationReadyEvent.class)
+    public void triggerMail() throws MessagingException {
+        String[] recipients = {"druva345@gmail.com", "adarshamv10@gmail.com"};
+        senderService.sendSimpleEmail(recipients,
+                "This is email body ",
+                "This is email subject Testing Purpose");
+    }
 }

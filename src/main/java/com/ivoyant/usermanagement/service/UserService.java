@@ -5,6 +5,8 @@ import com.ivoyant.usermanagement.repository.UserRepository;
 import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,17 +26,17 @@ public class UserService {
     @Autowired
     private EmailSenderService emailSenderService;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
+
     public User createUser(User user) {
         User savedUser = userRepository.save(user);
         if (savedUser != null) {
             String phoneNumber = savedUser.getPhoneNumber();
-            String a = userName;
-            String b = password;
             Twilio.init(userName, password);
             Long userID = savedUser.getId();
             String userPassword = savedUser.getPassword();
             String twilioMessage = "User Successfully Registered and your User Id : " + userID + " and your Password :" + userPassword + " Don't share with any one";
-            //SMS Notification Service
+            // SMS Notification Service
             Message.creator(new PhoneNumber(phoneNumber),
                     new PhoneNumber("+12706329318"), twilioMessage).create();
             // WhatsAPP Notification Service
@@ -45,7 +47,10 @@ public class UserService {
             ).create();
             //MAIL Notification Service
             String subject = "Successfull Registration Alert";
-            emailSenderService.sendSimpleEmail(user.getEmail().toString(), subject, twilioMessage);
+            emailSenderService.sendSimpleEmail(new String[]{user.getEmail().toString()}, subject, twilioMessage);
+            LOGGER.info("User Registered Successfully");
+
+
         }
         return savedUser;
     }
